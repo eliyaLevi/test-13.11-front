@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "username": "Miki",
+    "email": "miki@example.com",
+    "age": 25,
+    "img": "https://randomuser.me/api/portraits/men/1.jpg"
+  },
+  {
+    "id": "2",
+    "username": "Meni",
+    "email": "mani@example.com",
+    "age": 30,
+    "img": "https://randomuser.me/api/portraits/men/11.jpg"
+  },
+  {
+    "id": "3",
+    "username": "Alia",
+    "email": "Alia@example.com",
+    "age": 22,
+    "img": "https://randomuser.me/api/portraits/men/6.jpg"
+  },
+  {
+    "id": "4",
+    "username": "Gad",
+    "email": "Gad@example.com",
+    "age": 35,
+    "img": "https://randomuser.me/api/portraits/men/4.jpg"
+  }
+]
