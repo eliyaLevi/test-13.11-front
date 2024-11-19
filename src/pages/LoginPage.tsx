@@ -38,6 +38,7 @@ const LoginPage = () => {
 
     setError("");
     setIsLoading(true);
+
     try {
       const success = await login!({ email, password });
       if (success) {

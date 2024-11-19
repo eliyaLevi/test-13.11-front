@@ -26,12 +26,6 @@ export default function DisplayUsers2() {
   const { stars, setStars } = useContext(StarsContext);
   const { deleteFetch } = useFetch<User[]>("http://localhost:3001/data");
 
-  const { id } = useParams();
-
-  const delteUserM = async (id: string) => {
-    await deleteFetch(id);
-  };
-
   return (
     <>
       <PageHeader
@@ -63,7 +57,7 @@ export default function DisplayUsers2() {
             </div>
             <button
               onClick={() => {
-                delteUserM(user._id);
+                deleteFetch(user._id);
               }}
             >
               Delete
@@ -76,9 +70,7 @@ export default function DisplayUsers2() {
               Add Star
             </button>
             <button>
-              <NavLink to={`/users/edit/${user._id}`}>
-                Edit user
-              </NavLink>
+              <NavLink to={`/users/edit/${user._id}`}>Edit user</NavLink>
             </button>
             <div className="user-actions"></div>
           </div>

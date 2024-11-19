@@ -27,17 +27,14 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data, postFetch } = useFetch<IUser[]>("http://localhost:3001/auth/");
+  const { data, postFetch } = useFetch<IUser[]>("http://localhost:3001");
 
   const [user, setUser] = useState<IUser | null>(null);
 
-  const login = async (userFromClinet: UserDto): Promise<boolean> => {
+  const login = async (userFromClient: UserDto): Promise<boolean> => {
     try {
-      const user = postFetch(userFromClinet, "login");
-      if (!user) {
-        return false;
-      }
-      setUser(user);
+      const userData = await postFetch("auth/login", userFromClient);
+      setUser(userData.foundUser);
       return true;
     } catch (error) {
       return false;
