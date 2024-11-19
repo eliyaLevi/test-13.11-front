@@ -17,6 +17,7 @@ export default function useFetch<T>(url: string): any {
       }
       const result = await responce.json();
       setData(result);
+      return result;
     } catch (error) {
       setError((error as Error).message || "An unknown error occurred");
     }
@@ -68,7 +69,6 @@ export default function useFetch<T>(url: string): any {
     try {
       const responce = await fetch(`${url}/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
         credentials: "include", // חשוב בשביל קבלת הקוקיז
       });
       if (!responce.ok) {
@@ -76,8 +76,9 @@ export default function useFetch<T>(url: string): any {
         throw new Error(`HTTP ERROR!!! ${errorData.error.message}`);
       }
       await responce.json();
-      const data = getFetch();
-      console.log(data);
+      const newData = await getFetch();
+
+      return setData(newData);
     } catch (error) {
       setError((error as Error).message || "An unknown error occurred");
     }

@@ -1,7 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
-import { UserContext } from "../providers/UserProvider";
 import { StarsContext } from "../providers/StarProvider";
 // import useFetch from "../hooks/useFetch";
 import { AuthContext } from "../providers/AuthProvider";
@@ -21,10 +20,29 @@ interface User {
 export default function DisplayUsers2() {
   // step 4
   // Use the useContext
-  const { users, setUsers } = useContext(UserContext);
   const { user, logout } = useContext(AuthContext) ?? {};
+
+  const [users, setUsers] = useState<User[]>();
+
   const { stars, setStars } = useContext(StarsContext);
-  const { deleteFetch } = useFetch<User[]>("http://localhost:3001/data");
+  const { deleteFetch, getFetch, data } = useFetch<User[]>(
+    "http://localhost:3001/data"
+  );
+
+  useEffect(() => {
+    getFetch();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log(1);
+
+      console.log(data);
+      return setUsers(data);
+    } else {
+      console.log("No data Brooooo...");
+    }
+  }, [data]);
 
   return (
     <>
@@ -44,37 +62,38 @@ export default function DisplayUsers2() {
       </button>
 
       <div className="card-list">
-        {users!.map((user) => (
-          <div key={user._id} className="user-card">
-            <img
-              src={user.image}
-              alt={`${user.fullName}'s avatar`}
-              className="user-avatar"
-            />
-            <div className="user-info">
-              <h3>{user.fullName}</h3>
-              <p>Email: {user.email}</p>
+        {users &&
+          users.map((user) => (
+            <div key={user._id} className="user-card">
+              <img
+                src={user.image}
+                alt={`${user.fullName}'s avatar`}
+                className="user-avatar"
+              />
+              <div className="user-info">
+                <h3>{user.fullName}</h3>
+                <p>Email: {user.email}</p>
+              </div>
+              <button
+                onClick={() => {
+                  deleteFetch(user._id);
+                }}
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => {
+                  // setStars([...stars, user]);
+                }}
+              >
+                Add Star
+              </button>
+              <button>
+                <NavLink to={`/users/edit/${user._id}`}>Edit user</NavLink>
+              </button>
+              <div className="user-actions"></div>
             </div>
-            <button
-              onClick={() => {
-                deleteFetch(user._id);
-              }}
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => {
-                // setStars([...stars, user]);
-              }}
-            >
-              Add Star
-            </button>
-            <button>
-              <NavLink to={`/users/edit/${user._id}`}>Edit user</NavLink>
-            </button>
-            <div className="user-actions"></div>
-          </div>
-        ))}
+          ))}
       </div>
       <PageHeader title="Stars" subtitle="This is my STAR'S!!" />
       {/* <div className="card-list">

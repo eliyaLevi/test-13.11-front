@@ -4,7 +4,7 @@ import NewUser from "./NewUser";
 import DisplayUsers from "./DisplayUsers";
 import { Route, Routes } from "react-router-dom";
 import StarsUsers from "./StarsUsers";
-import EditUser from "./EditUser";
+// import EditUser from "./EditUser";
 import DisplayUsers2 from "./DisplayUsers2";
 interface User {
   id?: string;
@@ -63,7 +63,7 @@ export default function Users() {
           }
         />
         <Route path="/adduser" element={<NewUser />} />
-        <Route path="/edit/:id" element={<EditUser />} />
+        {/* <Route path="/edit/:id" element={<EditUser />} /> */}
         <Route path="/display" element={<DisplayUsers2 />} />
       </Routes>
     </>
