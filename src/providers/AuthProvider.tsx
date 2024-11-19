@@ -1,16 +1,24 @@
 import React, { createContext, useState, ReactNode } from "react";
-import useFetch  from "../hooks/useFetch";
+import useFetch from "../hooks/useFetch";
 
-
-interface User {
-  _id:string;
+interface IUser {
+  fullName: string;
   email: string;
-  password: string; 
+  password: string;
+  phone: string;
+  isAdmin: boolean;
+  image?: string;
+  createdAt: Date;
+}
+
+interface UserDto {
+  email: string;
+  password: string;
 }
 
 interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  user: IUser | null;
+  login: (user: UserDto) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -19,26 +27,25 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const { data, postFetch } = useFetch<IUser[]>("http://localhost:3001/auth/");
 
-  const  { getFetch, postFetch, putFetch, deleteFetch,data, error } = useFetch<User[]>("http://localhost:3001/auth/") 
+  const [user, setUser] = useState<IUser | null>(null);
 
-  const [user, setUser] = useState<User | null>(null);
-
-  const login = async (email: string, password: string) :Promise<boolean>=> {
+  const login = async (userFromClinet: UserDto): Promise<boolean> => {
     try {
-      const user = postFetch({email,password},"login")
-      if(!user){
-        return false
+      const user = postFetch(userFromClinet, "login");
+      if (!user) {
+        return false;
       }
-      return true
-      
+      setUser(user);
+      return true;
     } catch (error) {
-      return false
+      return false;
     }
   };
 
   const logout = async () => {
-    postFetch({},"logout")
+    postFetch({}, "logout");
   };
 
   return (
@@ -48,14 +55,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-
-
-
-
 // useEffect(() => {
-  
+
 // getFetch()
-  
 
 // }, [])
 
@@ -66,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 //   }
 //   else{
 //     console.log(data);
-    
+
 //   }
 
 // }, [[data]])

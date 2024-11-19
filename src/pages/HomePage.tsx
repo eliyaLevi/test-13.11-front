@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../providers/authProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
-  const authContext = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext) ?? {};
 
   return (
     <div>
-      {authContext?.user ? (
+      {user ? (
         <>
-          <h1>Welcome, {authContext.user.name}!</h1>
-          <button onClick={authContext.logout}>Logout</button>
+          <h1>Welcome {user.fullName}</h1>
+          <button onClick={() => logout!()}>Logout</button>
         </>
       ) : (
         <>
