@@ -62,7 +62,7 @@ export default function Users() {
             />
           }
         />
-        <Route path="/adduser" element={<NewUser addUser={addNewUser} />} />
+        <Route path="/adduser" element={<NewUser />} />
         <Route path="/edit/:id" element={<EditUser />} />
         <Route path="/display" element={<DisplayUsers2 />} />
       </Routes>

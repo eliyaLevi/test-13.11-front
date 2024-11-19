@@ -1,9 +1,11 @@
 import React, { createContext, useState, ReactNode } from "react";
+import useFetch  from "../hooks/useFetch";
+
 
 interface User {
-  _id: string;
+  _id:string;
   email: string;
-  name?: string;
+  password: string; 
 }
 
 interface AuthContextType {
@@ -17,46 +19,26 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
+  const  { getFetch, postFetch, putFetch, deleteFetch,data, error } = useFetch<User[]>("http://localhost:3001/auth/") 
+
   const [user, setUser] = useState<User | null>(null);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string) :Promise<boolean>=> {
     try {
-      const response = await fetch("http://localhost:7700/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // חשוב בשביל קבלת הקוקיז
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        return false;
+      const user = postFetch({email,password},"login")
+      if(!user){
+        return false
       }
-
-      const data = await response.json();
-      if (data.foundUser) {
-        setUser(data.foundUser);
-        return true;
-      }
-      return false;
+      return true
+      
     } catch (error) {
-      console.error("Login failed", error);
-      return false;
+      return false
     }
   };
 
   const logout = async () => {
-    try {
-      const response = await fetch("http://localhost:7700/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+    postFetch({},"logout")
   };
 
   return (
@@ -65,3 +47,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+
+
+
+
+// useEffect(() => {
+  
+// getFetch()
+  
+
+// }, [])
+
+// useEffect(() => {
+//   if(data){
+
+//     setUsers(data)
+//   }
+//   else{
+//     console.log(data);
+    
+//   }
+
+// }, [[data]])

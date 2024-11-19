@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
+import useFetch from "../hooks/useFetch";
+
 
 interface User {
-  id?: string;
-  username: string;
+  _id:string;
+  fullName: string;
   email: string;
-  age: number;
-  img: string;
+  password: string;
+  phone: string;
+  isAdmin: boolean;
+  image?: string;
+  createdAt: Date; 
 }
 
 interface Props {
@@ -27,15 +32,31 @@ export const UserContext = React.createContext<UserProps>({
 export default function UserProvider({ children }: Props) {
   const [users, setUsers] = useState<User[]>([]);
 
+  const  { getFetch, postFetch, putFetch, deleteFetch,data, error } = useFetch<User[]>("http://localhost:3001/data") 
+
   useEffect(() => {
-    fetch("")
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-        console.log(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+    
+    getFetch()
+    
+  
+  }, [])
+
+  useEffect(() => {
+    if(data){
+
+      setUsers(data)
+    }
+    else{
+      console.log(data);
+      
+    }
+  
+  }, [[data]])
+
+  
+
+  
+  
 
   return (
     // Step 2

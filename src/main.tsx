@@ -6,12 +6,18 @@ import { BrowserRouter, Navigate } from "react-router-dom";
 
 import { AuthContext, AuthProvider } from "./providers/authProvider.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import { StarProvider } from "./providers/StarProvider.tsx";
+import UserProvider from "./providers/UserProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
+      <StarProvider>
+        <UserProvider>
         <App />
+        </UserProvider>
+        </StarProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>

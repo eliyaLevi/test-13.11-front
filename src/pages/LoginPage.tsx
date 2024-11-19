@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../providers/authProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { useNavigate, useLocation } from "react-router-dom";
+
+
 
 const LoginPage = () => {
   const { user, login } = useContext(AuthContext) ?? {};
@@ -23,6 +25,8 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+
 
     if (!email.trim() || !password.trim()) {
       setError("נא למלא את כל השדות");

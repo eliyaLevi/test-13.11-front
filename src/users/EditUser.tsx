@@ -1,36 +1,49 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../providers/UserProvider";
+import useFetch from "../hooks/useFetch";
+
+interface User {
+  _id: string;
+  fullName: string;
+  email: string;
+  password: string;
+  phone: string;
+  isAdmin: boolean;
+  image?: string;
+  createdAt: Date;
+}
 
 const EditUser: React.FC = () => {
   const { setUsers, users } = useContext(UserContext);
+  const {putFetch} = useFetch<User>("http://localhost:3001/data");
 
   const { id } = useParams();
 
   const navigate = useNavigate();
+  //  Because no MongoDB
 
-  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [age, setAge] = useState(0);
-  const [img, setImg] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
-    const findUser = users.find((u) => u.id === id);
+    const findUser = users.find((u) => u._id === id);
     if (findUser) {
-      setUsername(findUser.username);
+      setFullName(findUser.fullName);
       setEmail(findUser.email);
-      setAge(findUser.age);
-      setImg(findUser.img);
+      setPhone(findUser.phone);
     }
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user.id === id ? { ...user, username, email, age, img } : user
-      )
-    );
+    putFetch( { fullName, email, phone },id);
+    // setUsers((prevUsers) =>
+    //   prevUsers.map((user) =>
+    //     user._id === id ? { ...user, fullName, email, password, img } : user
+    //   )
+    // );
     navigate("/users/display");
   };
   return (
@@ -38,14 +51,14 @@ const EditUser: React.FC = () => {
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="userName">User Name</label>
+            <label htmlFor="fullName">User Name</label>
             <input
-              id="userName"
+              id="fullName"
               type="text"
-              value={username}
+              value={fullName}
               placeholder="Enter your User Name"
               onChange={(event) => {
-                setUsername(event.target.value);
+                setFullName(event.target.value);
               }}
             />
           </div>
@@ -64,28 +77,14 @@ const EditUser: React.FC = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="img">Img</label>
+            <label htmlFor="phone">phone</label>
             <input
-              id="img"
-              type="text"
-              value={img}
-              placeholder="Enter your Pic"
-              onChange={(event) => {
-                setImg(event.target.value);
-              }}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="age">Age</label>
-            <input
-              id="age"
+              id="phone"
               type="number"
-              min={0}
-              value={age}
-              placeholder="0"
+              value={phone}
+              placeholder="Enter your phone"
               onChange={(event) => {
-                setAge(Number(event.target.value));
+                setPhone(event.target.value);
               }}
             />
           </div>

@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import useFetch from "../hooks/useFetch";
+// import { UserContext } from "../providers/UserProvider";
 
 interface User {
-  username: string;
+  _id: string;
+  fullName: string;
   email: string;
-  age: number;
-  img: string;
+  password: string;
+  phone: string;
+  isAdmin: boolean;
+  image?: string;
+  createdAt: Date;
 }
 
-interface Props {
-  addUser: (newuser: User) => void;
-}
+export default function NewUser() {
+  const { postFetch } = useFetch<User>("http://localhost:3001/data");
 
-export default function NewUser(props: Props) {
-  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [age, setAge] = useState(0);
-  const [img, setImg] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.addUser({
-      username,
-      email,
-      age,
-      img,
-    });
-    setUsername("");
+    postFetch({ fullName, email, password, phone }, "/");
+
+    setFullName("");
     setEmail("");
-    setAge(0);
-    setImg("");
+    setPassword("");
+    setPhone("");
   };
   return (
     <>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="userName">User Name</label>
+            <label htmlFor="fullName">User Name</label>
             <input
-              id="userName"
+              id="fullName"
               type="text"
-              value={username}
+              value={fullName}
               placeholder="Enter your User Name"
               onChange={(event) => {
-                setUsername(event.target.value);
+                setFullName(event.target.value);
               }}
             />
           </div>
@@ -61,28 +61,26 @@ export default function NewUser(props: Props) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="img">Img</label>
+            <label htmlFor="password">password</label>
             <input
-              id="img"
-              type="text"
-              value={img}
-              placeholder="Enter your Pic"
+              id="password"
+              type="password"
+              value={password}
+              placeholder="Enter your password"
               onChange={(event) => {
-                setImg(event.target.value);
+                setPassword(event.target.value);
               }}
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="age">Age</label>
+            <label htmlFor="phone">phone</label>
             <input
-              id="age"
-              type="number"
-              min={0}
-              value={age}
-              placeholder="0"
+              id="phone"
+              type="text"
+              value={phone}
               onChange={(event) => {
-                setAge(Number(event.target.value));
+                setPhone(event.target.value);
               }}
             />
           </div>

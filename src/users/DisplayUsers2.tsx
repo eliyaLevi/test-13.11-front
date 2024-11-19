@@ -1,14 +1,36 @@
-import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { NavLink, useParams } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import { UserContext } from "../providers/UserProvider";
-import { starsContext } from "../providers/StarsProvider";
+import { StarsContext } from "../providers/StarProvider";
+// import useFetch from "../hooks/useFetch";
+import { AuthContext } from "../providers/AuthProvider";
+import useFetch from "../hooks/useFetch";
+
+interface User {
+  _id: string;
+  fullName: string;
+  email: string;
+  password: string;
+  phone: string;
+  isAdmin: boolean;
+  image?: string;
+  createdAt: Date;
+}
 
 export default function DisplayUsers2() {
   // step 4
   // Use the useContext
   const { users, setUsers } = useContext(UserContext);
-  const { stars, setStars } = useContext(starsContext);
+  const { user, logout } = useContext(AuthContext) ?? {};
+  const { stars, setStars } = useContext(StarsContext);
+  const { deleteFetch } = useFetch<User[]>("http://localhost:3001/data");
+
+  const { id } = useParams();
+
+  const delteUserM = async (id: string) => {
+    await deleteFetch(id);
+  };
 
   return (
     <>
@@ -19,40 +41,51 @@ export default function DisplayUsers2() {
       <NavLink to={"/users/adduser"} className="add-user-link">
         Add user
       </NavLink>
+      <button
+        onClick={() => {
+          logout!();
+        }}
+      >
+        logout
+      </button>
 
       <div className="card-list">
         {users!.map((user) => (
-          <div key={user.id} className="user-card">
+          <div key={user._id} className="user-card">
             <img
-              src={user.img}
-              alt={`${user.username}'s avatar`}
+              src={user.image}
+              alt={`${user.fullName}'s avatar`}
               className="user-avatar"
             />
             <div className="user-info">
-              <h3>{user.username}</h3>
+              <h3>{user.fullName}</h3>
               <p>Email: {user.email}</p>
-              <p>Age: {user.age}</p>
             </div>
             <button
               onClick={() => {
-                setUsers(users.filter((prevUser) => prevUser.id !== user.id));
+                delteUserM(user._id);
               }}
             >
               Delete
             </button>
             <button
               onClick={() => {
-                setStars([...stars, user]);
+                // setStars([...stars, user]);
               }}
             >
               Add Star
+            </button>
+            <button>
+              <NavLink to={`/users/edit/${user._id}`}>
+                Edit user
+              </NavLink>
             </button>
             <div className="user-actions"></div>
           </div>
         ))}
       </div>
       <PageHeader title="Stars" subtitle="This is my STAR'S!!" />
-      <div className="card-list">
+      {/* <div className="card-list">
         {stars!.map((user) => (
           <div key={user.id} className="user-card">
             <img
@@ -67,7 +100,7 @@ export default function DisplayUsers2() {
             </div>
             <button
               onClick={() => {
-                setStars(stars.filter((prevUser) => prevUser.id !== user.id));
+                deleteFetch(id)
               }}
             >
               Delete
@@ -75,7 +108,7 @@ export default function DisplayUsers2() {
             <div className="user-actions"></div>
           </div>
         ))}
-      </div>
+      </div> */}
       {stars.length === 0 && <h1>Sorry but there no Stars</h1>}
     </>
   );
