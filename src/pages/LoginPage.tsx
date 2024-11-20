@@ -2,7 +2,20 @@ import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 
+interface IUser {
+  fullName: string;
+  email: string;
+  password: string;
+  phone: string;
+  isAdmin: boolean;
+  image?: string;
+  createdAt: Date;
+}
 
+interface UserDto {
+  email: string;
+  password: string;
+}
 
 const LoginPage = () => {
   const { user, login } = useContext(AuthContext) ?? {};
@@ -14,19 +27,9 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (user && !isLoading) {
-      const redirectTo = location.state?.from || "/";
-      navigate(redirectTo, { replace: true });
-    }
-  }, [user, navigate, location, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-
 
     if (!email.trim() || !password.trim()) {
       setError("נא למלא את כל השדות");
@@ -37,9 +40,9 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const success = await login!(email, password);
+      const success = await login!({ email, password });
       if (success) {
-        // המשתמש יועבר דרך useEffect
+        navigate("/");
       } else {
         setError("שם משתמש או סיסמה לא נכונים");
         setPassword("");
