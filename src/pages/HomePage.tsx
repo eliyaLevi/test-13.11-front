@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../providers/authProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
@@ -9,7 +9,7 @@ const HomePage = () => {
     <div>
       {authContext?.user ? (
         <>
-          <h1>Welcome, {authContext.user.name}!</h1>
+          <h1>Welcome, {authContext.user.email}!</h1>
           <button onClick={authContext.logout}>Logout</button>
         </>
       ) : (

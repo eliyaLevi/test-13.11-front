@@ -51,17 +51,6 @@ export default function Users() {
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <DisplayUsers
-              users={users}
-              deleteUser={deleteUser}
-              updateUser={updateSetUser}
-              addNewStar={addNewStar}
-            />
-          }
-        />
         <Route path="/adduser" element={<NewUser />} />
         <Route path="/edit/:id" element={<EditUser />} />
         <Route path="/display" element={<DisplayUsers2 />} />
