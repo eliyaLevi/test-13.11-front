@@ -13,6 +13,7 @@ const HomePage = () => {
         <>
           <h1>Welcome {user.fullName}</h1>
           <button onClick={() => logout!()}>Logout</button>
+          <p>new Branch</p>
         </>
       ) : (
         <>
